@@ -95,15 +95,11 @@ class SigMF_matlab:
 
         print sigmf_md
 
-        
+    
         annotation_md = {
-            "genesys:antenna": {"cable_loss"}
+            "genesys:transmitter_identification": 'hello',
+            "genesys:receiver_identification": 'hello',
         }
-        
-#         annotation_md = {
-#             "genesys:transmitter_identification": 'hello',
-#             "genesys:receiver_identification": 'hello',
-#         }
         sigmf_md.add_annotation(start_index=start_index,length=capture_len, metadata=annotation_md)
         
         #print "Hello"    

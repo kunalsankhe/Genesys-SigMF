@@ -1,6 +1,4 @@
 {
-     
-  
     "global": {
         "required": true,
         "type": "dict",
@@ -102,106 +100,7 @@
                 "type": "string",
                 "required": false,
                 "help": "Comment"
-            },
-            
-            
-            "genesys:transmitter" : {
-                "type": "dict_list",
-                "required": true,
-                "help": "Transmitter Information",
-                "keys": {
-                    "antenna": {
-                    "type": "dict_list",
-                    "required": true,
-                    "help": "antenna",
-                    "keys":
-                        {
-                        "cable_loss": {
-                            "type": "number",
-                            "required": true 
-                        },
-                        "gain": {
-                            "type": "number"
-                        },
-                        "high_frequency": {
-                            "type": "number"
-                        },
-                        "low_frequency": {
-                            "type": "number"
-                        },
-                        "model": {
-                            "type": "string"
-                        },
-                        "type": {
-                            "type": "string"
-                        }
-
-                    }
-                    },
-                        
-                     "model": {
-                        "type": "string",
-                        "required": true
-                      },                  
-                    "device_id":{                     
-                        "type": "string"                    
-                      }
-                        
-                }
             }
-                
-            },
-                    
-                    
-           "genesys:receiver" : {
-                "type": "dict_list",
-                "required": true,
-                "help": "Transmitter Information",
-                "keys": {
-                    "antenna": {
-                    "type": "dict_list",
-                    "required": true,
-                    "help": "antenna",
-                    "keys":
-                        {
-                        "cable_loss": {
-                            "type": "number",
-                            "required": true 
-                        },
-                        "gain": {
-                            "type": "number"
-                        },
-                        "high_frequency": {
-                            "type": "number"
-                        },
-                        "low_frequency": {
-                            "type": "number"
-                        },
-                        "model": {
-                            "type": "string"
-                        },
-                        "type": {
-                            "type": "string"
-                        }
-
-                    }                       
-                    
-                },     
-                     "model": {
-                        "type": "string",
-                        "required": true
-                      },                  
-                    "device_id":{                     
-                        "type": "string"                    
-                      }
-                    
-           }
         }
-        
     }
-    
-}
-            
-        }
-    
 }

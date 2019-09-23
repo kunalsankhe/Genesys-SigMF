@@ -183,6 +183,9 @@ class SigMFFile(object):
         assert length > 1
         metadata = metadata or {}
         metadata[self.START_INDEX_KEY] = start_index
+        
+        print "Hello"
+        
         metadata[self.LENGTH_INDEX_KEY] = length
         self._validate_dict_in_section(metadata, self.ANNOTATION_KEY)
         self._metadata[self.ANNOTATION_KEY] = insert_sorted_dict_list(
@@ -201,6 +204,36 @@ class SigMFFile(object):
             if x[self.START_INDEX_KEY] <= index
             and x[self.START_INDEX_KEY] + x[self.LENGTH_INDEX_KEY] > index
         ]
+    
+    def set_annotations(self, key, value, metadata=None):
+        """
+        Inserts a value into the annotation fields.
+
+        Will throw a ValueError if the key/value pair is invalid.
+        """
+        schema_section = self.get_schema()[self.ANNOTATION_KEY].get('keys', {})
+        print "Inside Set Annotation funcrion"
+        print schema_section
+        validate.validate_key_throw(
+            value,
+            schema_section.get(key, {}),
+            self.ANNOTATION_KEY,
+            key
+        )
+        #self._metadata[self.ANNOTATION_KEY][key] = value
+        metadata = metadata or {}
+        
+        print "Annnnn", self.ANNOTATION_KEY
+        
+        metadata[self.ANNOTATION_KEY] = value
+        self._validate_dict_in_section(metadata, self.ANNOTATION_KEY)
+        
+        self._metadata[self.ANNOTATION_KEY] = insert_sorted_dict_list(
+            self._metadata.get(self.ANNOTATION_KEY, []),
+            metadata,
+            value,
+        )
+        return value
 
     def calculate_hash(self):
         """
