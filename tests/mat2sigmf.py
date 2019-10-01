@@ -22,6 +22,7 @@ parser.add_argument('-f', '--frequency', type =float, default=2450000000, help='
 parser.add_argument('-a', '--author', default='Kunal Sankhe', help='The author\'s name')
 parser.add_argument('--source_filepath', default='', help='Filepath of the .mat source file to be converted to SigMF')
 parser.add_argument('--dest_filepath', default='', help='Filepath where SigMF data and meta files will be stored.')
+parser.add_argument('--version', default='0.02', help='Filepath where SigMF data and meta files will be stored.')
 parser.add_argument('--skip_datafile', default=False, type=str2bool, help='Skip datafile?')
 parser.add_argument('-ds', '--description', default='', help='The description in metafile of the SigMF recordings')
 
@@ -36,6 +37,8 @@ param['dest_filepath'] =args.dest_filepath
 param['author'] =args.author
 param['skip_datafile'] =args.skip_datafile
 param['frequency'] = args.frequency
+param['description'] = args.description
+param['version'] = args.version
 param['description'] = args.description
 
 import scipy.io
@@ -64,6 +67,7 @@ class SigMF_matlab:
             self.skip_datafile = param['skip_datafile']
             self.frequency = param['frequency']
             self.description = param['description']
+            self.version = param['version']
         #pass
 
     def create_sigmf_metafile(self, x_len, dest_data_filename, _file):        
@@ -72,6 +76,7 @@ class SigMF_matlab:
         sigmf_md.set_global_field("core:datatype", self.datatype)        
         sigmf_md.set_global_field("core:sample_rate", self.sample_rate)        
         sigmf_md.set_global_field("core:author", self.author)
+        sigmf_md.set_global_field("core:version", self.version)
         
         
         pattern = '(\d+)ft'
@@ -97,7 +102,8 @@ class SigMF_matlab:
 
         
         annotation_md = {
-            "genesys:antenna": {"cable_loss"}
+            "genesys:transmitter":{"antenna": {"model": "Ettus VERT2450", "type": "Vertical", "gain":3, "high_frequency":2480000000, "low_frequency":2400000000 }, "model": "Ettus USRP X310 with UBX-160 (10 MHz-6 GHz, 160 MHz BW) Daughterboard" },
+            "genesys:reciever":{"antenna": {"model": "Ettus VERT2450", "type": "Vertical", "gain":3, "high_frequency":2480000000, "low_frequency":2400000000 }, "model": "Ettus USRP B210" }
         }
         
 #         annotation_md = {
