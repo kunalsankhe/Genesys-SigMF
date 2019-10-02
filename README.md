@@ -26,38 +26,12 @@ on the same dataset, thus enabling data portability between tools and workflows.
 [Introduction](https://github.com/gnuradio/SigMF/blob/master/sigmf-spec.md#introduction)
 of the specification document.)
 
-## Contributing
+## Scripts to convert your dataset stored in .mat (MATLAB supported files) into SigMF dataset
 
-The SigMF standards effort is organized entirely within this Github repository.
-Questions, suggestions, bug reports, etc., are discussed in [the issue
-tracker](https://github.com/gnuradio/SigMF/issues). Changes to the specification
-only occur through [Pull Requests](https://github.com/gnuradio/SigMF/pulls).
+For more information on SigMF, please refer a section of Dataset Description on the link http://www.genesys-lab.org/oracle
 
-This ensures that the history and background of all discussions and changes are
-maintained for posterity.
 
-Anyone is welcome to get involved - indeed, the more people involved in the
-discussions, the more useful the standard is likely to be.
 
-## Frequently Asked Questions
+## Run below commands
 
-#### Is this a GNU Radio effort?
 
-*No*, this is not a GNU Radio-specific effort. It is hosted under the GNU Radio
-Github account because this effort first emerged from a group of GNU Radio core
-developers, but the goal of the project to provide a standard that will be
-useful to anyone and everyone, regardless of tool or workflow.
-
-#### Is this specific to wireless communications?
-
-*No*, similar to the response, above, the goal is to create something that is
-generally applicable to _signal processing_, regardless of whether or not the
-application is communications related.
-
-#### It seems like some issues take a long time to resolve?
-
-Yes, and in most cases this is by design. Since the goal of this project is
-create a broadly useful standards document, it is in our best interest to make
-sure we gather and consider as many opinions as possible, and produce the
-clearest and most exact language possible. This necessarily requires extreme
-attention to detail and diligence.
