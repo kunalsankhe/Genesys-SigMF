@@ -5,6 +5,8 @@ Welcome to the GENESYS SigMF project! The SigMF specification document is the
 
 SigMF: [Signal Metadata Format Specification](sigmf-spec.md)
 
+According to SigMF specification, each recording must consist of two files: a metadata file and a dataset file. The dataset file is a binary file of digital samples, and the metadata file contains information that describes the dataset. Our metadata and data format is an extension of, and compatible with the SigMF specifications. For more information on the extension of SigMF, please refer a section 'Dataset Description' on the link http://www.genesys-lab.org/oracle.
+
 ## Introduction
 
 Sharing sets of recorded signal data is an important part of science and
@@ -28,10 +30,26 @@ of the specification document.)
 
 ## Scripts to convert your dataset stored in .mat (MATLAB supported files) into SigMF dataset
 
-For more information on SigMF, please refer a section of Dataset Description on the link http://www.genesys-lab.org/oracle
+Step 1: Clone the repository
 
-
+git clone https://github.com/kunalsankhe/Genesys-SigMF.git
 
 ## Run below commands
 
+cd path-to-repository
+
+cd Genesys-SigMF/tests
+
+Modify variable annotation_md in mat2sigmf.py file according to your need. 
+
+annotation_md = {
+            "genesys:transmitter":{"antenna": {"model": "Ettus VERT2450", "type": "Vertical", "gain":3, "high_frequency":2480000000, "low_frequency":2400000000 }, "model": "Ettus USRP X310 with UBX-160 (10 MHz-6 GHz, 160 MHz BW) Daughterboard" },
+            "genesys:reciever":{"antenna": {"model": "Ettus VERT2450", "type": "Vertical", "gain":3, "high_frequency":2480000000, "low_frequency":2400000000 }, "model": "Ettus USRP B210" }
+        }
+
+
+Run mat2sigmf.py by providing necessary input arguments.. Run --help to see required arguments.  
+For example, 
+
+python mat2sigmf.py --datatype cf32 datatype5000000 --source_filepath '/home/kunal/Temp/' --dest_filepath /home/kunal/Temp/SigMF/ --skip_datafile False --version 0.02
 
