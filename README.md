@@ -1,6 +1,6 @@
 # Signal Metadata Format (SigMF)
 
-Welcome to the SigMF project! The SigMF specification document is the
+Welcome to the GENESYS SigMF project! The SigMF specification document is the
 `sigmf-spec.md` file in this repository:
 
 SigMF: [Signal Metadata Format Specification](sigmf-spec.md)
