@@ -1,6 +1,8 @@
-
-
-
+"""
+__author__: Kunal Sankhe
+__website__: https://kunalsankhe.github.io/
+__email__: sankhe.ku@northeastern.edu
+"""
 
 import argparse
 #from utils.utilities import str2bool
@@ -22,10 +24,9 @@ parser.add_argument('-f', '--frequency', type =float, default=2450000000, help='
 parser.add_argument('-a', '--author', default='Kunal Sankhe', help='The author\'s name')
 parser.add_argument('--source_filepath', default='', help='Filepath of the .mat source file to be converted to SigMF')
 parser.add_argument('--dest_filepath', default='', help='Filepath where SigMF data and meta files will be stored.')
-parser.add_argument('--version', default='0.02', help='Filepath where SigMF data and meta files will be stored.')
 parser.add_argument('--skip_datafile', default=False, type=str2bool, help='Skip datafile?')
 parser.add_argument('-ds', '--description', default='', help='The description in metafile of the SigMF recordings')
-
+parser.add_argument('--mat_variable', default='wifi_rx_data', help='MATLAB variable name that stores .mat data')
 
 args = parser.parse_args()
 
@@ -38,8 +39,7 @@ param['author'] =args.author
 param['skip_datafile'] =args.skip_datafile
 param['frequency'] = args.frequency
 param['description'] = args.description
-param['version'] = args.version
-param['description'] = args.description
+param['mat_variable'] = args.mat_variable
 
 import scipy.io
 import numpy as np
@@ -55,19 +55,19 @@ sys.path.insert(0,parentdir)
 from sigmf import sigmffile, utils
 from sigmf.sigmffile import SigMFFile
 
-# python mat2sigmf.py --datatype cf32 --sample_rate 5000000 --source_filepath '/media/kunal/GENESYS-HD/INFOCOM2019-ORACLE-Dataset/KRI-16Devices-RawData/' --dest_filepath /media/kunal/GENESYS-HD/INFOCOM2019-ORACLE-Dataset/SigMF-Dataset/KRI-16Devices-RawData/
+
 class SigMF_matlab:
     
     def __init__(self, param):
-            self.source_filepath = param['source_filepath']
-            self.datatype = param['datatype']
-            self.dest_filepath = param['dest_filepath']
-            self.author =param['author']
-            self.sample_rate =param['sample_rate']
-            self.skip_datafile = param['skip_datafile']
-            self.frequency = param['frequency']
-            self.description = param['description']
-            self.version = param['version']
+    	self.source_filepath = param['source_filepath']
+    	self.datatype = param['datatype']
+    	self.dest_filepath = param['dest_filepath']
+    	self.author =param['author']
+    	self.sample_rate =param['sample_rate']
+    	self.skip_datafile = param['skip_datafile']
+    	self.frequency = param['frequency']
+        self.description = param['description']
+        self.mat_variable = param['mat_variable']
         #pass
 
     def create_sigmf_metafile(self, x_len, dest_data_filename, _file):        
@@ -76,16 +76,6 @@ class SigMF_matlab:
         sigmf_md.set_global_field("core:datatype", self.datatype)        
         sigmf_md.set_global_field("core:sample_rate", self.sample_rate)        
         sigmf_md.set_global_field("core:author", self.author)
-        sigmf_md.set_global_field("core:version", self.version)
-        
-        
-        pattern = '(\d+)ft'
-        distance = re.findall(pattern, _file)
-        print 'distance', distance
-        
-        #--description "SigMF IQ samples recording of demodulated data derived from over-the-cable WiFi transmissions collected by a fixed USRP B210 as a receiver. The transmitter emitted IEEE 802.11a standards compliant frames generated via a MATLAB WLAN System toolbox. Using UHD software, a controlled level of IQ imbalance is introduced at the runtime such that the demodulated symbols acquire unique characteristics."
-      
-        self.description = "SigMF IQ samples recording of over-the-air WiFi transmissions collected by a fixed USRP B210 as a receiver. The data is collected in indoor environmnet of Kostas Research Institute (KRI), at Northeastern University, with a transmitter-receiver separation distance of " + distance[0] + "ft. The transmitter emitted IEEE 802.11a standards compliant frames generated via a MATLAB WLAN System toolbox."
         sigmf_md.set_global_field("core:description", self.description)
         sha =  sigmf_md.calculate_hash()
         print sha
@@ -93,28 +83,10 @@ class SigMF_matlab:
         capture_len = x_len
         capture_md = {"core:time": utils.get_sigmf_iso8601_datetime_now(), "frequency":self.frequency}
         sigmf_md.add_capture(start_index=start_index, metadata=capture_md)
-#         annotation_md = {
-#             "core:latitude": 40.0 + 0.0001 * 0,
-#             "core:longitude": -105.0 + 0.0001 * 0,
-#         }
-
-        print sigmf_md
-
         
-        annotation_md = {
-            "genesys:transmitter":{"antenna": {"model": "Ettus VERT2450", "type": "Vertical", "gain":3, "high_frequency":2480000000, "low_frequency":2400000000 }, "model": "Ettus USRP X310 with UBX-160 (10 MHz-6 GHz, 160 MHz BW) Daughterboard" },
-            "genesys:reciever":{"antenna": {"model": "Ettus VERT2450", "type": "Vertical", "gain":3, "high_frequency":2480000000, "low_frequency":2400000000 }, "model": "Ettus USRP B210" }
-        }
-        
-#         annotation_md = {
-#             "genesys:transmitter_identification": 'hello',
-#             "genesys:receiver_identification": 'hello',
-#         }
-        sigmf_md.add_annotation(start_index=start_index,length=capture_len, metadata=annotation_md)
-        
-        #print "Hello"    
-        #sigmf_md.set_annotations("genesys:transmitter_identification","Hello")
-
+        annotation_md = { "genesys:transmitter":{"antenna": {"model": "Ettus VERT2450", "type": "Vertical", "gain":3, "high_frequency":2480000000, "low_frequency":2400000000 }, "model": "Ettus USRP X310 with UBX-160 (10 MHz-6 GHz, 160 MHz BW) Daughterboard" }, "genesys:reciever":{"antenna": {"model": "Ettus VERT2450", "type": "Vertical", "gain":3, "high_frequency":2480000000, "low_frequency":2400000000 }, "model": "Ettus USRP B210" } }
+               
+        sigmf_md.add_annotation(start_index=start_index,length=capture_len, metadata = annotation_md)
         return sigmf_md
 
     def create_directory(self, dir_path):
@@ -123,35 +95,19 @@ class SigMF_matlab:
 
 
     def create_sigmf_datafile(self):
-        #source_filepath = '/media/kunal/GENESYS-HD/INFOCOM2019-ORACLE-Dataset/KRI-16Devices-RawData/'
-        #dest_filepath = '/media/kunal/GENESYS-HD/INFOCOM2019-ORACLE-Dataset/SigMF-Dataset/KRI-16Devices-RawData/' 
         
         included_extensions = ['mat']
         file_names = [fn for fn in os.listdir(self.source_filepath)
                       if any(fn.endswith(ext) for ext in included_extensions)]
-
         for _file in file_names:
             print _file
             source_file = self.source_filepath + _file 
-            #print _file
-            mat = scipy.io.loadmat(source_file)            
-            wifi_rx_data = mat['wifi_rx_data']
-            #wifi_rx_data = mat['demodulated_sym']
-            x_len = len(wifi_rx_data)
-            print x_len
-            #print wifi_rx_data[0]
-            
-            pattern = '(\d+)ft'
-            distance = re.findall(pattern, _file)
-            print 'distance', distance
-            
-            if distance:
-                dir_filepath = self.dest_filepath + distance[0] + "ft/"                
-            else:
-                dir_filepath = self.dest_filepath
+            mat = scipy.io.loadmat(source_file)                      
+            wifi_rx_data = mat[self.mat_variable]            
+            x_len = len(wifi_rx_data)                                    
+            dir_filepath = self.dest_filepath
             print dir_filepath  
-            dest_data_filename = dir_filepath  + _file[:-4] + '.sigmf-data'
-            
+            dest_data_filename = dir_filepath  + _file[:-4] + '.sigmf-data'            
             print dest_data_filename
 
             if not os.path.exists(dir_filepath):
@@ -161,7 +117,7 @@ class SigMF_matlab:
             	print "Creating SigMF datafile"
             	x_real = np.float32(np.real(wifi_rx_data))
             	x_imag = np.float32(np.imag(wifi_rx_data))
-            	x = np.zeros((x_len,2))
+            	x = np.zeros((x_len,2), dtype = np.float32)
             	x[:,0] = x_real.ravel()
             	x[:,1] = x_imag.ravel()
             	x = x.flatten()            	
@@ -174,10 +130,7 @@ class SigMF_matlab:
             
             print "Creating SigMF metafile"
 
-            sigmf_md = self.create_sigmf_metafile(x_len, dest_data_filename, _file )             
-
-            #print sigmf_md
-            
+            sigmf_md = self.create_sigmf_metafile(x_len, dest_data_filename, _file )                                     
             dest_meta_filename = dir_filepath + _file[:-4] + '.sigmf-meta'
             print dest_meta_filename
             
@@ -185,23 +138,13 @@ class SigMF_matlab:
                 json.dump(sigmf_md.__dict__, outfile)
 
             print "Finished SigMF datafile"
-            
-            
-	
-        
+         
         
 def main(param):
-	#param['datatype'] =args.datatype
-	#print param['datatype']    
     x = SigMF_matlab(param)   
-    #x.create_directory()
     x.create_sigmf_datafile()
     
-        
-    
 if __name__== "__main__":	
-	#param['datatype'] =args.datatype
-	#print param['datatype']
     main(param)
 
     
