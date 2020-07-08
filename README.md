@@ -51,5 +51,5 @@ annotation_md = {
 Run mat2sigmf.py by providing necessary input arguments.. Run --help to see required arguments.  
 For example, 
 
-python mat2sigmf.py --datatype cf32 datatype5000000 --source_filepath '/home/kunal/Temp/' --dest_filepath /home/kunal/Temp/SigMF/ --skip_datafile False --version 0.02
+python mat2sigmf.py --datatype cf32 --sample_rate 5000000 --source_filepath '/home/kunal/Temp/' --dest_filepath /home/kunal/Temp/SigMF/ --skip_datafile False --version 0.02
 
